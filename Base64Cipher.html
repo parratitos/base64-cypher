@@ -1,0 +1,666 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Base64Cypher</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel="icon" id="ico" type="image/x-icon" href="Ico" />
+<script type="text/javascript" >
+// <![CDATA[
+function onLoad() {
+	document.getElementById("ico").href = Ico ;
+	renewMAP( B64CE._b64 );
+	document.getElementById('txtArea').value = '' ;
+
+	var coll = document.getElementsByClassName("collapsible");
+	for (var i = 0; i < coll.length; i++) {
+		coll[i].addEventListener("click", function() {
+		this.classList.toggle("active");
+		var content = this.nextElementSibling;
+		if (content.style.display === "block")
+			content.style.display = "none";
+		else
+			content.style.display = "block";
+		});
+	}
+	
+	var txtinput = document.getElementById('passphrase');
+	txtinput.addEventListener('input', function() {
+		barajarB64();
+	});
+	
+	var cfginput = document.getElementsByName('cfg');
+	for (var i = 0; i < cfginput.length; i++) {
+		cfginput[i].addEventListener("change", function() {
+			CypherCFG();
+		});
+	}
+	
+	CypherCFG();
+	barajarB64();
+}
+
+function cipher(){
+	CypherCFG();
+	var cyph = B64CE.cipher( document.getElementById('txtArea').value ) ;
+	document.getElementById('txtArea').value = cyph ;
+}
+
+function decipher(){
+	CypherCFG();
+	var plain = B64CE.decipher( document.getElementById('txtArea').value ) ;
+	document.getElementById('txtArea').value = plain ;
+}
+
+function renewMAP(str) {
+	document.getElementById('b64').value = str;
+	B64CE._b64int = str ;
+}
+
+function barajarB64() {
+	B64CE._masterPass = document.getElementById('passphrase').value ;
+
+	var newB64 ;
+	if ( B64CE._masterPass ==""){
+		newB64 = B64CE._b64 ;
+	}else{
+		newB64 = B64CE._anagrama(B64CE._masterPass,B64CE._b64) ;
+	}
+
+	document.getElementById('b64').value = newB64;
+	B64CE._b64int = newB64 ;
+}
+
+function CypherCFG(){
+	// var cfg = document.querySelector('input[name="cfg"]:checked').value;
+	B64CE._cfg64 = document.getElementById('cfg64').value ;
+	B64CE._cfg65 = document.getElementById('cfg65').value ;
+	B64CE._cfg93 = document.getElementById('cfg93').value ;
+}
+
+function toggleMostrar(element){
+	if( element.style.visibility=='hidden' ){
+		element.style.visibility='visible';
+		element.style.display='';
+	}else{
+		element.style.visibility='hidden';
+		element.style.display='none';
+	}
+}
+
+function toggleActivarTraza(bool){
+	B64CE._traza = bool ;
+	toggleMostrar(document.getElementById('divtraza'));
+}
+
+var Ico = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAACxIAAAsSAdLdfvwAAALeSURBVFhH5ZZPiE1RHMefDRsLNSuSnT9N2UlRSjbYKMrCSLassKMmWwtRFhpZkg1WSmahNChmMs3IKPkzGUVvNJOXSc97M2Z8vved8/q969x7z3Ml5Vuf7j3n/M7v/P+dU/mXtRtWtX5La637dqURONr6La2b7hut7TAPD5JUSyuhD67CU6hCAxbgC7yEW3AKNoLXfpDNliQVqUuw5NgJclI3eUWo8/LRA99c3lmI0nqwzqZBI/XpJkxs2NG3aCFvGGadjeej+R+EKO0C68Ty8Py92lIe2AxAaLa0TFE6Ah2Ve9ZtbjDK56EGQ2w7fK6KvdZdS2F9LYdCnQRbaSrUSAx0opbytRUK9QiSCoy8GXLcDXRCy6E9Ip/XIVc6au3162ba88DXuPOpJVkNmToESeNQuOFiYSCTxu8dyJSCjIw6ph4Hn8nrt3lFYD+WStuTsQaCUoSTwYStTAe0o5N8/qu2zMLun6Nc6z0HDVtGWlHSd2APBKWgowYXbWXSU8o3TNtyQd6LlM3jgI3nOAT1HX7pgCBPZYp02khvSE/6MkauJRqCr9Dk9MzYuh7KPKchqGSqQx34E8i3ox+CUrj8Gx04AUHpSpXBcMhBGfB52fkWByEov1Nn0w6Yldfka6P9cGg/jJHfhNG0fRps34HvQC8EpceENxrwlWngicnPQtf0M7gL9+GGqa/Xlbd7D8sgKL1k/A1W160mB3xncNI+Vvy/Atm9dbYdcAo+eVtB+oMr08ztg1y1X0M0smAdZYGtAphuPoXcC4FyNayvZrJQK2AUVGGeTtTSDmNh5hR+fQhWhDwAUVKoVKUEOlEPNVAEdZPA5rgIXUkvYEU4VVbvx+lIO/plgc2IW3M/7eIKZG68PO0F/5jwaEpvpxsmT+fcHjWhuhr5bzXutQmuQfp9l4dGrw0XveYx0ktGj4lQgxad88KjVkZ6TGiTHoMzoItFsV3hVRGu1HT/b6pUfgLDbqiylbzLHwAAAABJRU5ErkJggg==" ;
+
+//funcion para obtener un hash md5
+!function(n){"use strict";function d(n,t){var r=(65535&n)+(65535&t);return(n>>16)+(t>>16)+(r>>16)<<16|65535&r}function f(n,t,r,e,o,u){return d((u=d(d(t,n),d(e,u)))<<o|u>>>32-o,r)}function l(n,t,r,e,o,u,c){return f(t&r|~t&e,n,t,o,u,c)}function g(n,t,r,e,o,u,c){return f(t&e|r&~e,n,t,o,u,c)}function v(n,t,r,e,o,u,c){return f(t^r^e,n,t,o,u,c)}function m(n,t,r,e,o,u,c){return f(r^(t|~e),n,t,o,u,c)}function c(n,t){var r,e,o,u;n[t>>5]|=128<<t%32,n[14+(t+64>>>9<<4)]=t;for(var c=1732584193,f=-271733879,i=-1732584194,a=271733878,h=0;h<n.length;h+=16)c=l(r=c,e=f,o=i,u=a,n[h],7,-680876936),a=l(a,c,f,i,n[h+1],12,-389564586),i=l(i,a,c,f,n[h+2],17,606105819),f=l(f,i,a,c,n[h+3],22,-1044525330),c=l(c,f,i,a,n[h+4],7,-176418897),a=l(a,c,f,i,n[h+5],12,1200080426),i=l(i,a,c,f,n[h+6],17,-1473231341),f=l(f,i,a,c,n[h+7],22,-45705983),c=l(c,f,i,a,n[h+8],7,1770035416),a=l(a,c,f,i,n[h+9],12,-1958414417),i=l(i,a,c,f,n[h+10],17,-42063),f=l(f,i,a,c,n[h+11],22,-1990404162),c=l(c,f,i,a,n[h+12],7,1804603682),a=l(a,c,f,i,n[h+13],12,-40341101),i=l(i,a,c,f,n[h+14],17,-1502002290),c=g(c,f=l(f,i,a,c,n[h+15],22,1236535329),i,a,n[h+1],5,-165796510),a=g(a,c,f,i,n[h+6],9,-1069501632),i=g(i,a,c,f,n[h+11],14,643717713),f=g(f,i,a,c,n[h],20,-373897302),c=g(c,f,i,a,n[h+5],5,-701558691),a=g(a,c,f,i,n[h+10],9,38016083),i=g(i,a,c,f,n[h+15],14,-660478335),f=g(f,i,a,c,n[h+4],20,-405537848),c=g(c,f,i,a,n[h+9],5,568446438),a=g(a,c,f,i,n[h+14],9,-1019803690),i=g(i,a,c,f,n[h+3],14,-187363961),f=g(f,i,a,c,n[h+8],20,1163531501),c=g(c,f,i,a,n[h+13],5,-1444681467),a=g(a,c,f,i,n[h+2],9,-51403784),i=g(i,a,c,f,n[h+7],14,1735328473),c=v(c,f=g(f,i,a,c,n[h+12],20,-1926607734),i,a,n[h+5],4,-378558),a=v(a,c,f,i,n[h+8],11,-2022574463),i=v(i,a,c,f,n[h+11],16,1839030562),f=v(f,i,a,c,n[h+14],23,-35309556),c=v(c,f,i,a,n[h+1],4,-1530992060),a=v(a,c,f,i,n[h+4],11,1272893353),i=v(i,a,c,f,n[h+7],16,-155497632),f=v(f,i,a,c,n[h+10],23,-1094730640),c=v(c,f,i,a,n[h+13],4,681279174),a=v(a,c,f,i,n[h],11,-358537222),i=v(i,a,c,f,n[h+3],16,-722521979),f=v(f,i,a,c,n[h+6],23,76029189),c=v(c,f,i,a,n[h+9],4,-640364487),a=v(a,c,f,i,n[h+12],11,-421815835),i=v(i,a,c,f,n[h+15],16,530742520),c=m(c,f=v(f,i,a,c,n[h+2],23,-995338651),i,a,n[h],6,-198630844),a=m(a,c,f,i,n[h+7],10,1126891415),i=m(i,a,c,f,n[h+14],15,-1416354905),f=m(f,i,a,c,n[h+5],21,-57434055),c=m(c,f,i,a,n[h+12],6,1700485571),a=m(a,c,f,i,n[h+3],10,-1894986606),i=m(i,a,c,f,n[h+10],15,-1051523),f=m(f,i,a,c,n[h+1],21,-2054922799),c=m(c,f,i,a,n[h+8],6,1873313359),a=m(a,c,f,i,n[h+15],10,-30611744),i=m(i,a,c,f,n[h+6],15,-1560198380),f=m(f,i,a,c,n[h+13],21,1309151649),c=m(c,f,i,a,n[h+4],6,-145523070),a=m(a,c,f,i,n[h+11],10,-1120210379),i=m(i,a,c,f,n[h+2],15,718787259),f=m(f,i,a,c,n[h+9],21,-343485551),c=d(c,r),f=d(f,e),i=d(i,o),a=d(a,u);return[c,f,i,a]}function i(n){for(var t="",r=32*n.length,e=0;e<r;e+=8)t+=String.fromCharCode(n[e>>5]>>>e%32&255);return t}function a(n){var t=[];for(t[(n.length>>2)-1]=void 0,e=0;e<t.length;e+=1)t[e]=0;for(var r=8*n.length,e=0;e<r;e+=8)t[e>>5]|=(255&n.charCodeAt(e/8))<<e%32;return t}function e(n){for(var t,r="0123456789abcdef",e="",o=0;o<n.length;o+=1)t=n.charCodeAt(o),e+=r.charAt(t>>>4&15)+r.charAt(15&t);return e}function r(n){return unescape(encodeURIComponent(n))}function o(n){return i(c(a(n=r(n)),8*n.length))}function u(n,t){return function(n,t){var r,e=a(n),o=[],u=[];for(o[15]=u[15]=void 0,16<e.length&&(e=c(e,8*n.length)),r=0;r<16;r+=1)o[r]=909522486^e[r],u[r]=1549556828^e[r];return t=c(o.concat(a(t)),512+8*t.length),i(c(u.concat(t),640))}(r(n),r(t))}function t(n,t,r){return t?r?u(t,n):e(u(t,n)):r?o(n):e(o(n))}"function"==typeof define&&define.amd?define(function(){return t}):"object"==typeof module&&module.exports?module.exports=t:n.md5=t}(this);
+
+/////////////////////////////////////////////////////
+///////////////// B64 Cipher Engine /////////////////
+/////////////////////////////////////////////////////
+var B64CE = {
+// private property
+_traza : false,
+//_cycle : 0 ,
+_masterPass : "",	// password
+_UTF8_txt_length : null ,	// longitud del texto en utf8
+//contadores de repeticiones
+_cfg64 : 0 ,
+_cfg65 : 0 ,
+_cfg93 : 0 ,
+// matrices de alfabetos para sustitución
+_Vigenere64Matrix : [] ,
+_Vigenere65Matrix : [] ,
+_Vigenere93Matrix : [] ,
+//Base64 estandar (sin "=")
+_b64 : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
+_B64fin : "",	// Base64 final (mod by Txt size)
+_b64int : "",	// Base64 intermedio (mod by password)
+// Caracteres 1 byte:	[]()<>?!@#$%&*-^`'_.,;:{|}~ "\	Caracteres 2 bytes:	˅¡¢£¤¥¦§¨©
+_b93 : "abcdefghijklmnopqrstuvwxyz0123456789+/=[({<?|,`!@#$%&*-^; :_.~'])}>ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+
+//public method for cipher
+_init : function () {
+	this._UTF8_txt_length = null;
+	this._Vigenere64Matrix = [];
+	this._Vigenere65Matrix = [];
+	this._Vigenere93Matrix = [];
+},
+
+//public method for cipher
+cipher : function (input) {
+	this._init();
+	var output = "";
+	
+	output += input +"\r\n\r\n" ;
+	
+	input = B64CE._utf8_encode(input);
+	this._UTF8_txt_length = input.length ;
+	
+	output += "Contraseña seleccionada:\t"+ this._masterPass + "\r\n";
+	output += "Base64 alterado por pass:\t"+ this._b64int + "=" + "\r\n";
+	
+	B64CE._anagramaXvolumen();
+	output += "Base64 alterado por texto:\t"+ this._B64fin + "\r\n";
+	
+	//Encoding en Base64 alternativo (con el juego de caracteres modificado)
+	//utiliza como variable de cifrado la longitud del texto plano
+	input = B64CE._encodeAltB64(input);
+	output += "\r\nFalso Base64 1 (Base64Mod):\t"+ input ;
+	output +="\r\n";
+	
+	//Cifrado de Vigenere con alfabetos de 64 caracteres de longitud
+	//utiliza como variable de cifrado la longitud del texto plano
+	for (var i = 0 ; i < this._cfg64 ; i++ ){
+		input = B64CE._susticionVigenere(input, this._b64 ,true);
+		output += "\r\nFalso Base64 2 (Vigenere):\t"+ input ;
+	}
+	this._UTF8_txt_length = null;
+
+	if(this._cfg65>0)output +="\r\n";
+	//Cifrado de Vigenere con alfabetos de 65 caracteres de longitud
+	// NO usa la longitud del texto plano como variable de cifrado 
+	for (var i = 0 ; i < this._cfg65 ; i++ ){
+		input = B64CE._susticionVigenere(input,this._b64+"=",true);
+		output += "\r\nSustitución (Vigenere 65):\t"+ input ; 
+		
+	}
+	
+	if(this._cfg93>0)output +="\r\n";
+	//Cifrado de Vigenere con alfabetos de 93 caracteres de longitud
+	// NO usa la longitud del texto plano como variable de cifrado
+	for (var i = 0 ; i < this._cfg93 ; i++ ){
+		input = B64CE._susticionVigenere(input,this._b93,true);
+		output += "\r\nSustitución (Vigenere 93):\t"+ input ;
+	}
+	
+	if(!this._traza) output = input ;
+	
+	return output;
+},
+
+//public method for decipher
+decipher : function (input) {
+	this._init();
+	var output ="";
+
+	output += input + "\r\n\r\n";
+
+	//descifrado de Vigenere con alfabetos de 93 caracteres de longitud
+	for (var i = 0 ; i < this._cfg93 ; i++ ){
+		input = B64CE._susticionVigenere(input,this._b93,false);
+		output += "Sustitución (Vigenere 93):\t"+ input + "\r\n";
+	}
+	if(this._cfg93>0)output +="\r\n";
+
+	//descifrado de Vigenere con alfabetos de 65 caracteres de longitud
+	for (var i = 0 ; i < this._cfg65 ; i++ ){
+		input = B64CE._susticionVigenere(input,this._b64+"=",false);
+		output += "Sustitución (Vigenere 65):\t"+ input + "\r\n";
+	}
+	if(this._cfg65>0)output +="\r\n";
+	
+	this._UTF8_txt_length = B64CE._calcularLongitudBytes(input);
+
+	output += "Contraseña seleccionada:\t"+ this._masterPass + "\r\n";
+	output += "Base64 alterado por pass:\t"+ this._b64int + "=" + "\r\n";
+	B64CE._anagramaXvolumen();
+	output += "Base64 alterado por texto:\t"+ this._B64fin + "\r\n\r\n";
+	
+	//descifrado de Vigenere con alfabetos de 64 caracteres de longitud
+	//se utiliza como variable de cifrado la longitud del texto a cifrar 
+	for (var i = 0 ; i < this._cfg64 ; i++ ){
+	input = B64CE._susticionVigenere(input,this._b64,false);
+	output += "Falso Base64 2 (Vigenere):\t"+ input + "\r\n";
+	}
+	output +="\r\n";
+
+	//Encoding en Base64 alternativo (con el juego de caracteres modificado)
+	//se utiliza como variable de cifrado la longitud del texto a cifrar 
+	input = B64CE._decodeAltB64(input);
+	input = B64CE._utf8_decode(input);
+
+	output += "Falso Base64 1 (Base64Mod):\t"+ input ;
+	
+	if(!this._traza) output = input ;
+	
+	return output;
+},
+
+_calcularLongitudBytes : function (b64txt) {
+	var length4Trunc = Math.trunc( b64txt.length / 4 ) ;
+	var iguales = b64txt.match(/=/g)==null ? 0 : b64txt.match(/=/g).length ;
+	var length_utf8_bytes = b64txt.length - length4Trunc - iguales;
+	return length_utf8_bytes ;
+},
+
+///////// Sustitucion de Vigenere /////////
+_susticionVigenere : function (input,base,isCypher) {
+	var VigenereMatrix = [];
+	var output = "" ;
+	var plainAlphabet = base ;
+	var iguales ;
+	
+	//inicializo la matriz
+	if( base==this._b64 ){
+		if( this._Vigenere64Matrix.length==0 )
+			this._Vigenere64Matrix = B64CE._init_Matrix(base,input.length);
+		VigenereMatrix = this._Vigenere64Matrix ;
+	}
+	else if( base==this._b93 ){
+		if( this._Vigenere93Matrix.length==0 )
+			this._Vigenere93Matrix = B64CE._init_Matrix(base,input.length);
+		VigenereMatrix = this._Vigenere93Matrix ;
+	}
+	else{
+		if( this._Vigenere65Matrix.length==0 )
+			this._Vigenere65Matrix = B64CE._init_Matrix(base,input.length);
+		VigenereMatrix = this._Vigenere65Matrix ;
+	}
+
+	//cuento los iguales para quitarlos de la entrada
+	if( base==this._b64 ){
+		var iguales = input.match(/=/g)==null ? 0 : input.match(/=/g).length ;
+		
+		if(iguales!=0)
+			input = input.substr(0,input.length-iguales);
+	}
+	
+	var vigLengh = VigenereMatrix.length ;
+	
+	if( isCypher ){
+		for(var n = 0; n < input.length + 1 ; n++ ){
+			var charlocation = plainAlphabet.indexOf( input[n] ) ;
+			output += VigenereMatrix[ n % vigLengh ].charAt( charlocation ) ;
+		}
+	}else{
+		for(var n = 0; n < input.length + 1 ; n++ ){
+			var charlocation = VigenereMatrix[ n % vigLengh ].indexOf( input[n] ) ;
+			output += plainAlphabet.charAt( charlocation ) ;
+		}
+	}
+	
+	//vuelvo a incorporar los iguales
+	if( base == this._b64 )
+		if(iguales!=0)
+			output += iguales == 1 ? "=" : "==" ;
+	
+	return output ;
+},
+
+_init_Matrix : function (base,txtsize) {
+	var VigenereMatrix = [];
+	var limit = txtsize<111 ? txtsize : txtsize<333 ? Math.trunc(txtsize*3/4) : txtsize<555 ? Math.trunc(txtsize*4/5) : 500 ; 
+	var stringTMP = base ;
+	var stringFinal ;
+
+	for (var i = 0; i < limit ; i++) {
+		stringFinal = B64CE._anagrama( this._masterPass + this._UTF8_txt_length + i , stringTMP );
+	//	stringFinal = B64CE._anagrama( this._masterPass + this._UTF8_txt_length + i + this._cycle , stringTMP );
+		VigenereMatrix.push( stringFinal );
+	}
+	
+	return VigenereMatrix ;
+},
+
+///////// Modificar Map Base64 /////////
+
+_anagramaXvolumen : function () {
+	var passphrase = this._b64int + this._masterPass + this._UTF8_txt_length ;
+	var newB64 = B64CE._anagrama(passphrase,this._b64int);
+	this._B64fin = newB64 + "=" ;
+},
+
+_anagrama : function(pass,oldArray){
+	var newArray = "";
+	var intBig = B64CE._CalcularHashs( pass );
+	
+	for(var n = 0; oldArray.length>0 ; n++){
+		var charlocation = intBig % oldArray.length ;
+		newArray += oldArray.charAt( charlocation ) ;
+		oldArray = oldArray.replace( oldArray.charAt( charlocation ) , "" );
+	}
+	return newArray;
+},
+
+_CalcularHashs : function (passphrase) {
+    var randomString = md5(passphrase) + passphrase + md5(passphrase).split("").reverse().join("") ;
+	
+	var intB64 = passphrase.length;
+	for(var n = 0; n < randomString.length; n++) {
+		intB64 += randomString.charCodeAt(n);
+	}
+	intB64 *= passphrase.length;
+	return  intB64 ;
+} ,
+
+///////// B64 encoding-decoding /////////
+// private method for Base64 encoding
+_encodeAltB64 : function (input) {
+	var output = "";
+	var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+	var i = 0;
+
+	while (i < input.length) {
+
+		chr1 = input.charCodeAt(i++);
+		chr2 = input.charCodeAt(i++);
+		chr3 = input.charCodeAt(i++);
+
+		enc1 = chr1 >> 2;
+		enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+		enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+		enc4 = chr3 & 63;
+
+		if (isNaN(chr2)) {
+			enc3 = enc4 = 64;
+		} else if (isNaN(chr3)) {
+			enc4 = 64;
+		}
+
+		output +=
+		this._B64fin.charAt(enc1) + this._B64fin.charAt(enc2) +
+		this._B64fin.charAt(enc3) + this._B64fin.charAt(enc4);
+	}
+	return output;
+},
+
+// private method for Base64 decoding
+_decodeAltB64 : function (input) {
+	var output = "";
+	var chr1, chr2, chr3;
+	var enc1, enc2, enc3, enc4;
+	var i = 0;
+
+	input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+
+	while (i < input.length) {
+
+		enc1 = this._B64fin.indexOf(input.charAt(i++));
+		enc2 = this._B64fin.indexOf(input.charAt(i++));
+		enc3 = this._B64fin.indexOf(input.charAt(i++));
+		enc4 = this._B64fin.indexOf(input.charAt(i++));
+
+		chr1 = (enc1 << 2) | (enc2 >> 4);
+		chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+		chr3 = ((enc3 & 3) << 6) | enc4;
+
+		output = output + String.fromCharCode(chr1);
+
+		if (enc3 != 64) {
+			output = output + String.fromCharCode(chr2);
+		}
+		if (enc4 != 64) {
+			output = output + String.fromCharCode(chr3);
+		}
+	}
+	return output;
+},
+
+///////// UTF-8 encoding-decoding /////////
+// private method for UTF-8 encoding
+_utf8_encode : function (string) {
+	string = string.replace(/\r\n/g,"\n");
+	var utftext = "";
+
+	for (var n = 0; n < string.length; n++) {
+
+		var c = string.charCodeAt(n);
+
+		if (c < 128) {
+			utftext += String.fromCharCode(c);
+		}
+		else if((c > 127) && (c < 2048)) {
+			utftext += String.fromCharCode((c >> 6) | 192);
+			utftext += String.fromCharCode((c & 63) | 128);
+		}
+		else {
+			utftext += String.fromCharCode((c >> 12) | 224);
+			utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+			utftext += String.fromCharCode((c & 63) | 128);
+		}
+	}
+	return utftext;
+},
+
+// private method for UTF-8 decoding
+_utf8_decode : function (utftext) {
+	var string = "";
+	var i = 0;
+	var c = c1 = c2 = 0;
+
+	while ( i < utftext.length ) {
+
+		c = utftext.charCodeAt(i);
+
+		if (c < 128) {
+			string += String.fromCharCode(c);
+			i++;
+		}
+		else if((c > 191) && (c < 224)) {
+			c2 = utftext.charCodeAt(i+1);
+			string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+			i += 2;
+		}
+		else {
+			c2 = utftext.charCodeAt(i+1);
+			c3 = utftext.charCodeAt(i+2);
+			string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+			i += 3;
+		}
+	}
+	return string;
+}
+
+}//final de la clase B64CE
+
+//////////////// funciones con ficheros ////////////////
+function saveCipheredFile(data, filename, type) {
+	var f = document.getElementById("files").files[0]; // FileList object
+	var reader = new FileReader();
+	// Closure to capture the file information.
+	reader.onload = (function(theFile) {
+		return function(e) {
+			var binaryData = e.target.result;
+			//Converting Binary Data to base 64
+			// var base64String = window.btoa(binaryData);
+			var base64String = B64ce.cipher(binaryData);
+			//showing file converted to base64
+			document.getElementById('txtArea').value = base64String;
+			download(base64String, 'test.txt', 'text/plain') ;
+		};
+	})(f);
+	// Read in the image file as a data URL.
+	reader.readAsBinaryString(f);
+}
+
+function saveDecipheredFile(data, filename, type) {
+	var f = document.getElementById("files").files[0]; // FileList object
+	var reader = new FileReader();
+	// Closure to capture the file information.
+	reader.onload = (function(theFile) {
+		return function(e) {
+			var binaryData = e.target.result;
+			saveDecipheredTxt(binaryData,'test.bin','application/octet-stream')
+		};
+	})(f);
+	// Read in the image file as a data URL.
+	reader.readAsBinaryString(f);
+}
+
+function saveDecipheredTxt(data, filename, type) {
+	if( "" != document.getElementById("files").value )
+	{
+		filename = document.getElementById("files").value; 
+		filename = filename.replace("C:\\fakepath\\","");
+	}
+	// const byteCharacters = atob(data);
+	const byteCharacters = B64ce.decipher(data);
+
+	const byteNumbers = new Array(byteCharacters.length);
+	for (let i = 0; i < byteCharacters.length; i++) {
+		byteNumbers[i] = byteCharacters.charCodeAt(i);
+	}
+	const byteArray = new Uint8Array(byteNumbers);
+
+	download(byteArray, filename, type);
+}
+
+function download(data, filename, type) {
+	var file = new Blob([ data ], {type: type});
+	if (window.navigator.msSaveOrOpenBlob) // IE10+
+		window.navigator.msSaveOrOpenBlob(file, filename);
+	else { // Others
+		var a = document.createElement("a");
+		var url = URL.createObjectURL(file);
+		a.href = url;
+		a.download = filename;
+		document.body.appendChild(a);
+		a.dispatchEvent(
+			new MouseEvent('click', { 
+				bubbles: true, 
+				cancelable: true, 
+				view: window 
+			})
+		);
+		// Remove link from body
+		document.body.removeChild(a);
+	}
+}
+
+function showBynaryFile() {
+	var file = document.getElementById("files").files[0]; // FileList object
+	var reader = new FileReader();
+	//reader.readAsArrayBuffer(file);
+	reader.readAsBinaryString(file);
+	reader.onload = function() {
+		document.getElementById('txtArea').value = reader.result;
+	};
+	reader.onerror = function() {};
+}
+
+function showCipheredFile() {
+	// https://codepen.io/AshV/pen/pjodjV
+	var f = document.getElementById("files").files[0]; // FileList object
+	var reader = new FileReader();
+	// Closure to capture the file information.
+	reader.onload = (function(theFile) {
+		return function(e) {
+			var binaryData = e.target.result;
+			//Converting Binary Data to base 64
+			// var base64String = window.btoa(binaryData);
+			var base64String = B64ce.cipher(binaryData);
+			//showing file converted to base64
+			document.getElementById('txtArea').value = base64String;
+		};
+	})(f);
+	// Read in the image file as a data URL.
+	reader.readAsBinaryString(f);
+}
+
+// ]]>
+</script>
+<style>
+.collapsible {
+ cursor: pointer;
+ width: 100%;
+ padding:3px;
+ border: none;
+ text-align: left;
+ outline: none;
+ font-size: 15px;
+ background-color: #444444;
+ color:#FFFFFF;
+}
+.content {
+ padding: 0 18px;
+ display: none;
+ overflow: hidden;
+ background-color: #818181;
+}
+body {
+ text-align:center;
+ color:#FFFFFF;
+ background-color: #000000;
+}
+table, td , tr {
+ text-align:center;
+ padding:4px;
+ margin:auto;
+}
+#cfg64,#cfg65,#cfg93 {
+  width: 3em;
+}
+em {
+ font-weight:900;
+ color:#000000;
+}
+label {
+ background-color:#444444;
+ padding:3px;
+}
+</style>
+</head>
+<body onload="onLoad();">
+<form action="" enctype="multipart/form-data" >
+<table>
+	<tr>
+		<td >
+			<div id="div64Alterado" style="width:565px;" >
+				<br/><font onclick="renewMAP(B64CE._b64);document.getElementById('passphrase').value='';" 
+				style="font-size:22px;font-weight:bold">Base64 Cypher™</font><br/><br/>
+			</div>
+			<button type="button" class="collapsible"> ···> Configuraci&oacute;n de cifrado</button>
+			<div class="content">
+				<div id="alter" ><br/>
+					<textarea name="b64" cols="62" rows="1" id="b64" disabled style="resize:none;" ></textarea>
+				</div>
+				<div id="divpass"><br/>
+					<label id="clavetxt" onclick="toggleMostrar(document.getElementById('divcfg'));">
+					&nbsp;&nbsp;Contraseña:&nbsp;&nbsp;</label>&nbsp;
+					<input type="text" id="passphrase" size="55" value="" /><br/>
+				</div>
+				<div id="divcfg" style="visibility:hidden;display:none;"><br/>
+					<label id="clavetxt" onclick="toggleMostrar(document.getElementById('divtraza'));">
+					N&uacute;mero de repeticiones a realizar para cada distinto bloque de cifrado:</label><br/><br/>
+					Falso Base64&nbsp;<input type="number" id="cfg64" name="cfg64" min="1" max="99" value="11" />&nbsp;&nbsp;<em>-</em>&nbsp;&nbsp;
+					B65 (Base64 + '=')&nbsp;<input type="number" id="cfg65" name="cfg64" min="0" max="99" value="13" />&nbsp;&nbsp;<em>-</em>&nbsp;&nbsp;
+					B93 (93 chars.)&nbsp;<input type="number" id="cfg93" name="cfg93" min="0" max="99" value="0" /><br/>
+				</div>
+				<div id="divtraza" style="visibility:hidden;display:none;"><br/>
+					<label for="trace" onclick="toggleMostrar(document.getElementById('divtraza'));">Activar modo debug:</label>&nbsp;&nbsp;
+					<input type="radio" id="ok" name="trace" value="ok" onchange="toggleActivarTraza(true);" />Traza visible
+					<font color="Black" face="Comic Sans MS,arial">&nbsp;&nbsp;&nbsp;&lt;&asymp;&gt;&nbsp;&nbsp;</font>
+					<input type="radio" id="ko" name="trace" value="ko" checked onchange="toggleActivarTraza(false);" />Traza oculta<br/>
+				</div><br/>
+			</div>
+			<hr/>
+			<button type="button" class="collapsible"> ···> Cifrar/Descifrar Texto</button>
+			<div class="content"><br/>
+				<input type="button" id="bC" value=" Cifrar " onclick="cipher();" /> · · · · 
+				<input type="button" id="bD" value=" Descifrar " onclick="decipher();" /> · · · · 
+				<input type="button" id="bB" onclick="this.form.txtArea.value='';" value=" Borrar &aacute;rea de texto " />
+				<br/><br/><textarea name="txtArea" cols="69" rows="11" id="txtArea"></textarea><br/><br/>
+			<input type="button" id="bT" value="Guardar en fichero de texto plano" onclick="download(this.form.txtArea.value,'test.txt','text/plain')" /> · · · · · 
+			<input type="button" id="bF" value="Descifrar y guardar en binario" onclick="saveDecipheredTxt(this.form.txtArea.value,'test.bin','application/octet-stream')" />
+				<br/>&nbsp;
+			</div>
+			<hr/>
+			<button type="button" class="collapsible"> ···> Cifrar/Descifrar Ficheros</button>
+			<div class="content"><br/>
+				<input type="file" value="" id="files" style="border-style:dotted;border-width:1px;width:369px;" name="filess" /> · · 
+				<input type="button" id="bCM" value="Mostrar Contenido" onclick="showBynaryFile();" /><br/><br/>
+				<input type="button" id="bCF" value="Cifrar y mostrar" onclick="showCipheredFile();" /> · 
+				<input type="button" id="bCGT" value="Cifrar y guardar en texto plano" onclick="saveCipheredFile()" /> · 
+				<input type="button" id="bCGB" value="Descifrar y guardar en binario" onclick="saveDecipheredFile()" />
+				<br/>&nbsp;
+			</div>
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>
